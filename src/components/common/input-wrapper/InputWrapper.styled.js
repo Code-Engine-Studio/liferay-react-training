@@ -7,7 +7,8 @@ export const InputLabel = styled.div`
     cursor: pointer;
     margin-bottom: 10px;
     border: 1px solid
-        ${({ isValid }) => (isValid ? "white" : "var(--red-color)")};
+        ${({ isValid, touched }) =>
+            !isValid && touched ? "var(--red-color)" : "white"};
 
     input {
         outline: none;

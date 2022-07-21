@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { relationships } from "../../utils/constants";
-import { steps } from "../../utils/stepContants";
+import { relationships } from "../../constants/constants";
+import { steps } from "../../constants/stepContants";
 
 const initState = {
     data: {
@@ -59,12 +59,11 @@ const formStepSlice = createSlice({
                 state.currentIndexForm = index;
             }
         },
-        updateDataField(state, { payload: { fieldName, value } }) {
+        updateDataField(state, { payload: { fieldName, value, error } }) {
             state.data[fieldName] = value;
-        },
-        updateErrorDataField(state, { payload: { fieldName, error } }) {
             state.error[fieldName] = error;
         },
+
         updateBeneficiaryRelationship(state, { payload }) {
             state.data.beneficiaryRelationship = payload;
         },
@@ -77,6 +76,5 @@ export const {
     choosePreForm,
     chooseForm,
     updateDataField,
-    updateErrorDataField,
     updateBeneficiaryRelationship,
 } = formStepSlice.actions;

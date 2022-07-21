@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Steps from "../common/steps/Steps";
 import { useSelector } from "react-redux";
-import { steps } from "../../utils/stepContants";
-import headlessAPI from "../../api/headlessAPI";
+import { steps } from "../../constants/stepContants";
 import SuccessfulPage from "./SuccessfulPage";
+import { createInsuranceProfile } from "../../service/insuranceProfilesService";
 
 const FormStepWrapper = styled.div`
     background-color: var(--white-color);
@@ -20,15 +20,13 @@ const FormStepWrapper = styled.div`
 
 export default function FormStep() {
     const [success, setSuccess] = useState(false);
+    const data = useSelector((state) => state.formStep);
     const currentIndexForm = useSelector(
         (state) => state.formStep.currentIndexForm
     );
 
-    const data = useSelector((state) => state.formStep);
-    console.log(data);
-
     const submitForm = async () => {
-        await headlessAPI.post("/o/c/insuranceprofiles/", { ...data.data });
+        await createInsuranceProfile(data.data);
         setSuccess(true);
     };
 

@@ -3,14 +3,15 @@ import { updateBeneficiaryRelationship } from "../../redux/slices/formStepSlice"
 import {
     beneficicaryProfileInputs,
     relationships,
-} from "../../utils/constants";
-import { validRequireInput } from "../../utils/utils";
+} from "../../constants/constants";
+import { isValidForm } from "../../helpers/utils";
 import FormWrapper from "../common/form-wrapper/FormWrapper";
 import Input from "../common/input/Input";
 import Select from "../common/select/Select";
 
 export default function BeneficicaryProfileStep() {
     const formData = useSelector((state) => state.formStep.data);
+    const errors = useSelector((state) => state.formStep.error);
     const dispatch = useDispatch();
 
     const renderedInput = beneficicaryProfileInputs.map((input) => (
@@ -19,9 +20,7 @@ export default function BeneficicaryProfileStep() {
 
     return (
         <FormWrapper
-            validateNext={() =>
-                validRequireInput(beneficicaryProfileInputs, formData)
-            }
+            validateNext={() => isValidForm(beneficicaryProfileInputs, errors)}
         >
             {renderedInput}
             <Select

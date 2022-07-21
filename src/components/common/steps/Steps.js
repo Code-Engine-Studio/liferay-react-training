@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { chooseForm } from "../../../redux/slices/formStepSlice";
-import { steps } from "../../../utils/stepContants";
+import { steps } from "../../../constants/stepContants";
 import { Step, StepContainer } from "./Steps.styled";
 
 export default function Steps() {

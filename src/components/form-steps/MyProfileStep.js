@@ -1,21 +1,17 @@
 import { useSelector } from "react-redux";
-import { myProfileInputs } from "../../utils/constants";
-import { validRequireInput } from "../../utils/utils";
+import { myProfileInputs } from "../../constants/constants";
+import { isValidForm } from "../../helpers/utils";
 import FormWrapper from "../common/form-wrapper/FormWrapper";
 import Input from "../common/input/Input";
 
 export default function MyProfileStep() {
-    const formData = useSelector((state) => state.formStep.data);
-
-    const renderedInput = myProfileInputs.map((input) => (
-        <Input key={input.name} {...input} />
-    ));
+    const erorrs = useSelector((state) => state.formStep.error);
 
     return (
-        <FormWrapper
-            validateNext={() => validRequireInput(myProfileInputs, formData)}
-        >
-            {renderedInput}
+        <FormWrapper validateNext={() => isValidForm(myProfileInputs, erorrs)}>
+            {myProfileInputs.map((input) => (
+                <Input key={input.name} {...input} />
+            ))}
         </FormWrapper>
     );
 }

@@ -1,42 +1,39 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    updateDataField,
-    updateErrorDataField,
-} from "../../../redux/slices/formStepSlice";
+import { updateDataField } from "../../../redux/slices/formStepSlice";
 import { InputWrapper } from "../input-wrapper/InputWrapper";
 
-export default function Input({ title, require, name, ...otherPorps }) {
+export default function Input({
+    title,
+    require,
+    name,
+    validateSchema,
+    ...otherPorps
+}) {
     const id = useId();
     const dispatch = useDispatch();
     const value = useSelector(({ formStep }) => formStep.data[name]);
     const error = useSelector(({ formStep }) => formStep.error[name]);
+    const [touched, setTouched] = useState(false);
 
-    const onInputChange = (event) => {
+    const onInputChange = async (value) => {
+        let errorMessage = "";
+        try {
+            await validateSchema.validate(value);
+        } catch (error) {
+            errorMessage = error.message;
+        }
         dispatch(
             updateDataField({
                 fieldName: name,
-                value: event.target.value,
+                value,
+                error: errorMessage,
             })
         );
     };
 
-    const onLeaveFocusInput = (event) => {
-        if (require && !event.target.value) {
-            dispatch(
-                updateErrorDataField({
-                    fieldName: name,
-                    error: `${title} is require`,
-                })
-            );
-        } else {
-            dispatch(
-                updateErrorDataField({
-                    fieldName: name,
-                    error: ``,
-                })
-            );
-        }
+    const onLeaveFocusInput = () => {
+        setTouched(true);
     };
 
     return (
@@ -45,13 +42,14 @@ export default function Input({ title, require, name, ...otherPorps }) {
             error={error}
             inputId={id}
             require={require}
+            touched={touched}
         >
             <input
                 id={id}
                 name={name}
                 value={value}
                 {...otherPorps}
-                onChange={onInputChange}
+                onChange={(event) => onInputChange(event.target.value)}
                 onBlur={onLeaveFocusInput}
             />
         </InputWrapper>
