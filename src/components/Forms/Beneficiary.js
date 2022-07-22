@@ -2,9 +2,13 @@ import { formActions } from "../../redux/form-slice";
 import { useDispatch, useSelector } from "react-redux";
 import InputWrapper from "../FormElements/InputWrapper";
 import SelectInput from "../FormElements/Select";
+import { useForm, FormProvider } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import {beneficiarySchema} from "../../services/schema";
 
 const Beneficiary = () => {
   const dispatch = useDispatch();
+  const methods = useForm({ resolver: yupResolver(beneficiarySchema), mode: "all" });
   const data = useSelector((state) => state.form.data);
   const handleChange = (e) => {
     dispatch(
@@ -16,7 +20,8 @@ const Beneficiary = () => {
   };
   const goPrev = () => dispatch(formActions.goPrev());
   return (
-    <form className="form">
+    <FormProvider {...methods}>
+    <form className="form" onSubmit={methods.handleSubmit(onSubmit)}>
       <h1>Beneficiary Information</h1>
       <SelectInput
         data={data}
@@ -76,11 +81,12 @@ const Beneficiary = () => {
         <button className="btn btn-prev" onClick={goPrev}>
           Previous
         </button>
-        <button className="btn btn-submit" onClick={onSubmit}>
+        <button className="btn btn-submit" type="submit">
           Continue
         </button>
       </div>
     </form>
+    </FormProvider>
   );
 };
 
